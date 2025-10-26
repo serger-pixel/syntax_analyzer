@@ -44,24 +44,92 @@ public  class SyntaxAnalyzer {
     private static LinkedHashMap<String, List<String>> jumpTable = new LinkedHashMap<>();
 
     private static void createJumpTable(){
-        jumpTable.put("BEGIN,K", List.of("S0", "END", "O")); 
-        jumpTable.put("VAR,J", List.of("S0", ";INTEGER:", "L"));
-        jumpTable.put(",,M", List.of("S0", "M", "D", ","));
-        jumpTable.put("(,T", List.of("S0", ")", "Q", "("));
-        jumpTable.put("WRITE,P", List.of("S0", ";", "L"));
-        jumpTable.put("READ,P", List.of("S0", ";", "L"));
-        jumpTable.put("CASE,P", List.of("S0", ";END_CASE", "V", "OF", "Q"));
-        jumpTable.put("~,F", List.of("S0", "e"));
-        jumpTable.put("+,G", List.of("S0", "e"));
-        jumpTable.put("/,G", List.of("S0", "e"));
-        jumpTable.put("-,G", List.of("S0", "e"));
+        //1-ая группа
+        jumpTable.put("BEGIN,K", List.of( "END", "O"));
+        jumpTable.put("VAR,J", List.of( ";INTEGER:", "L"));
+        jumpTable.put(",,M", List.of( "M", "D", ","));
+        jumpTable.put("(,T", List.of( ")", "Q", "("));
+        jumpTable.put("WRITE,P", List.of( ";", "L"));
+        jumpTable.put("READ,P", List.of( ";", "L"));
+        jumpTable.put("CASE,P", List.of( ";END_CASE", "V", "OF", "Q"));
+        jumpTable.put("~,F", List.of( ));
+        jumpTable.put("+,G", List.of( ));
+        jumpTable.put("/,G", List.of( ));
+        jumpTable.put("-,G", List.of( ));
 
         for (char c = '0'; c <= '9'; c++) {
-            jumpTable.put(c + ",A", List.of("S0", "e"));
+            jumpTable.put(c + ",A", List.of( ));
         }
 
         for (char c = 'a'; c <= 'z'; c++) {
-            jumpTable.put(c + ",H", List.of("S0", "e"));
+            jumpTable.put(c + ",H", List.of());
         }
+
+
+        //2-ая группа
+
+        // Переходы для <Конст'>
+        for (char c = '0'; c <= '9'; c++) {
+            jumpTable.put(c + ",C", List.of( "C", "A"));
+        }
+
+        // Переходы для <Конст>
+        for (char c = '0'; c <= '9'; c++) {
+            jumpTable.put(c + ",B", List.of( "C", "A"));
+        }
+
+        // Переходы для <Идент'>
+        for (char c = 'a'; c <= 'z'; c++) {
+            jumpTable.put(c + ",E", List.of( "H", "E"));
+        }
+
+        // Переходы для <Идент>
+        for (char c = 'a'; c <= 'z'; c++) {
+            jumpTable.put(c + ",D", List.of( "H", "E"));
+        }
+
+
+        // Переходы для <Выбор>
+        for (char c = '0'; c <= '9'; c++) {
+            jumpTable.put(c + ",U", List.of(";", "N", ":", "B"));
+        }
+
+        // Переходы для <Список выбора'>
+        for (char c = '0'; c <= '9'; c++) {
+            jumpTable.put(c + ",W", List.of("W", "U"));
+        }
+
+        // Переходы для <Список выбора>
+        for (char c = '0'; c <= '9'; c++) {
+            jumpTable.put(c + ",V", List.of("W", "U"));
+        }
+
+
+
+        // Переходы для <Оператор>
+        for (char c = 'a'; c <= 'z'; c++) {
+            jumpTable.put(c + ",P", List.of("N"));
+        }
+
+        // Переходы для <Операнд'>
+        for (char c = 'a'; c <= 'z'; c++) {
+            jumpTable.put(c + ",T", List.of("D"));
+        }
+        for (char c = '0'; c <= '9'; c++) {
+            jumpTable.put(c + ",T", List.of("B"));
+        }
+        jumpTable.put("(,T", List.of("T"));
+
+        // Переходы для <Операнд>
+        jumpTable.put("~,S", List.of("T", "F"));
+        for (char c = 'a'; c <= 'z'; c++) {
+            jumpTable.put(c + ",S", List.of("T"));
+        }
+        for (char c = '0'; c <= '9'; c++) {
+            jumpTable.put(c + ",S", List.of("T"));
+        }
+        jumpTable.put("(,S", List.of("T"));
+
+        
     }
 }
