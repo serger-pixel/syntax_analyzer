@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public  class SyntaxAnalyzer {
     //Пустой таккт
@@ -233,5 +230,31 @@ public  class SyntaxAnalyzer {
         jumpTable.put("=,=", List.of("+"));
         jumpTable.put("INTEGER,INTEGER", List.of("+"));
         jumpTable.put("END,END", List.of("+"));
+    }
+
+
+    public static Boolean read(ArrayDeque<String> input){
+        ArrayDeque<String> pda = new ArrayDeque<String>();
+        pda.add("h0");
+        pda.add("I");
+        while (!input.isEmpty()) {
+            String currentInput = input.getFirst();
+            String currentPDA = pda.getFirst();
+            String argument = currentInput + currentPDA;
+            if (jumpTable.containsKey(argument)) {
+                List<String> value = jumpTable.get(argument);
+                if (value.getFirst().equals(fullProcess)) {
+                    input.removeLast();
+                }
+                pda.removeLast();
+                if (value.size() != 1) {
+                    for (int i = 1; i < value.size(); i++) {
+                        pda.add(value.get(i));
+                    }
+                }
+            }
+            return false;
+        }
+        return (pda.getLast().equals("h0"));
     }
 }
