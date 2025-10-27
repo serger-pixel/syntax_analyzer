@@ -42,7 +42,7 @@ public class LexicalAnalyzer {
     }
 
     //Проверка программы на верные лексемы
-    public static boolean readProgram(String program){
+    public static boolean checkProgram(String program){
 
         String result = program;
         result = result.replaceAll(regexNotIdentifier, "_");

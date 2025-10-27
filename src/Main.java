@@ -4,17 +4,19 @@ public class Main {
     public static void main(String[] args) {
 
         String program =
-                "VAR a, b, hoho:INTEGER\n" +
+                "VAR a, b:INTEGER;\n" +
                 "BEGIN\n" +
-                "b = 1;\n" +
-                "hoho = 3;\n" +
-                "a = (b+hoho);\n" +
-                "CASE (a+b) OF 4: c = 10 END_CASE;\n"+
+                "CASE (a+b) OF " +
+                        "4: " +
+                        "c = (1 + (a+b);" +
+                        "3:" +
+                        "a = 2; " +
+                        "END_CASE;\n"+
                 "READ(a, b, c);\n"+
                 "WRITE(a, b, c);\n"+
                 "END";
 
-        ArrayDeque<String> result = LexicalAnalyzer.transform(program);
+        Boolean result = SyntaxAnalyzer.check(program);
         System.out.println(result);
     }
 }

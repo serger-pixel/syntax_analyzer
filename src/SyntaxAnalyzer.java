@@ -7,32 +7,6 @@ public  class SyntaxAnalyzer {
     private static String fullProcess = "+";
 
 
-    //Таблица нетерминалов
-    private static LinkedHashMap<String, String> notTerminals = new LinkedHashMap<>(Map.ofEntries(
-            Map.entry("A", "<Цифра>"),
-            Map.entry("B", "<Конст>"),
-            Map.entry("C", "<Конст'>"),
-            Map.entry("D", "<Идент>"),
-            Map.entry("E", "<Идент'>"),
-            Map.entry("F", "<Ун. оп.>"),
-            Map.entry("G", "<Бин. оп.>"),
-            Map.entry("H", "<Буква>"),
-            Map.entry("I", "<Программа>"),
-            Map.entry("J", "<Объявление переменных>"),
-            Map.entry("K", "<Описание вычислений>"),
-            Map.entry("L", "<Список переменных>"),
-            Map.entry("M", "<Список переменных'>"),
-            Map.entry("N", "<Присваивание>"),
-            Map.entry("O", "<Список операторов>"),
-            Map.entry("P", "<Оператор>"),
-            Map.entry("Q", "<Выражение>"),
-            Map.entry("R", "<Выражение'>"),
-            Map.entry("S", "<Операнд>"),
-            Map.entry("T", "<Операнд'>"),
-            Map.entry("U", "<Выбор>"),
-            Map.entry("V", "<Список выбора>"),
-            Map.entry("W", "<Список выбора'>")
-    ));
 
     //Таблица переходов
     private static LinkedHashMap<String, List<String>> jumpTable = new LinkedHashMap<>();
@@ -41,13 +15,17 @@ public  class SyntaxAnalyzer {
         char[] operators = {'+', '-', '/'};
         //1-ая группа
         jumpTable.put("BEGIN,K", List.of("+", "END", "O"));
-        jumpTable.put("VAR,J", List.of("+", ";INTEGER:", "L"));
-        jumpTable.put(",,M", List.of("+", "M", "D", ","));
-        jumpTable.put("(,T", List.of("+", ")", "Q", "("));
-        jumpTable.put("WRITE,P", List.of("+", ";", "L"));
-        jumpTable.put("READ,P", List.of("+", ";", "L"));
-        jumpTable.put("CASE,P", List.of("+", ";END_CASE", "V", "OF", "Q"));
+        jumpTable.put("VAR,J", List.of("+", ";", "INTEGER", "X"));
+        jumpTable.put(",,M", List.of("+", "M", "D"));
+        jumpTable.put("),M", List.of("+"));
+        jumpTable.put("(,D", List.of("+", ")", "Q"));
+        jumpTable.put("WRITE,P", List.of("+", ";", "L", "("));
+        jumpTable.put("READ,P", List.of("+", ";", "L", "("));
+        jumpTable.put("CASE,P", List.of("+", ";", "V", "OF", "Q"));
+        jumpTable.put("END_CASE,W", List.of("+"));
         jumpTable.put("~,F", List.of("+"));
+        jumpTable.put(",,Y", List.of("+", "Y", "D"));
+        jumpTable.put(":,Y", List.of("+"));
 
         for (char op : operators) {
             jumpTable.put(op + ",G", List.of("+"));
@@ -65,6 +43,11 @@ public  class SyntaxAnalyzer {
 
         //2-ая группа
 
+        //Переходы для <Список объявления>
+        for(char c = 'a';  c <= 'z'; c++){
+            jumpTable.put(c +",X", List.of("-", "Y", "D"));
+        }
+
 
         // Переходы для <Конст'>
         for (char c = '0'; c <= '9'; c++) {
@@ -80,19 +63,19 @@ public  class SyntaxAnalyzer {
 
         // Переходы для <Идент'>
         for (char c = 'a'; c <= 'z'; c++) {
-            jumpTable.put(c + ",E", List.of("-", "H", "E"));
+            jumpTable.put(c + ",E", List.of("-", "E", "H"));
         }
 
 
         // Переходы для <Идент>
         for (char c = 'a'; c <= 'z'; c++) {
-            jumpTable.put(c + ",D", List.of("-", "H", "E"));
+            jumpTable.put(c + ",D", List.of("-", "E", "H"));
         }
 
 
         // Переходы для <Выбор>
         for (char c = '0'; c <= '9'; c++) {
-            jumpTable.put(c + ",U", List.of("-", ";", "N", ":", "B"));
+            jumpTable.put(c + ",U", List.of("-", "N", ":", "B"));
         }
 
 
@@ -121,7 +104,7 @@ public  class SyntaxAnalyzer {
         for (char c = '0'; c <= '9'; c++) {
             jumpTable.put(c + ",T", List.of("-", "B"));
         }
-        jumpTable.put("(,T", List.of("-", "T"));
+        jumpTable.put("(,T", List.of("-", "D"));
 
 
         // Переходы для <Операнд>
@@ -187,6 +170,8 @@ public  class SyntaxAnalyzer {
         jumpTable.put("+,C", List.of("-"));
         jumpTable.put("-,C", List.of("-"));
         jumpTable.put("/,C", List.of("-"));
+        jumpTable.put(";,C", List.of("-"));
+        jumpTable.put("),C", List.of("-"));
 
 
         // Переходы для <Идент'>
@@ -195,10 +180,9 @@ public  class SyntaxAnalyzer {
         jumpTable.put("+,E", List.of("-"));
         jumpTable.put("-,E", List.of("-"));
         jumpTable.put("/,E", List.of("-"));
-
-
-        // Переходы для <Список выбора'>
-        jumpTable.put("END_CASE,W", List.of("-"));
+        jumpTable.put(":,E", List.of("-"));
+        jumpTable.put("),E", List.of("-"));
+        jumpTable.put(";,E", List.of("-"));
 
 
         // Переходы для <Выражение'>
@@ -210,11 +194,6 @@ public  class SyntaxAnalyzer {
         jumpTable.put("/,R", List.of("-", "R", "S", "G"));
 
 
-        // Переходы для <Список переменных'>
-        jumpTable.put(":,M", List.of("-"));
-        jumpTable.put("),M", List.of("-"));
-
-
         // Переходы для <Список операторов>
         jumpTable.put("END,O", List.of("-"));
 
@@ -224,7 +203,6 @@ public  class SyntaxAnalyzer {
         jumpTable.put(":,:", List.of("+"));
         jumpTable.put(";,;", List.of("+"));
         jumpTable.put("OF,OF", List.of("+"));
-        jumpTable.put("END_CASE,END_CASE", List.of("+"));
         jumpTable.put("(,(", List.of("+"));
         jumpTable.put("),)", List.of("+"));
         jumpTable.put("=,=", List.of("+"));
@@ -237,14 +215,15 @@ public  class SyntaxAnalyzer {
         ArrayDeque<String> pda = new ArrayDeque<String>();
         pda.add("h0");
         pda.add("I");
+        createJumpTable();
         while (!input.isEmpty()) {
             String currentInput = input.getFirst();
-            String currentPDA = pda.getFirst();
-            String argument = currentInput + currentPDA;
+            String currentPDA = pda.getLast();
+            String argument = currentInput + "," + currentPDA;
             if (jumpTable.containsKey(argument)) {
                 List<String> value = jumpTable.get(argument);
                 if (value.getFirst().equals(fullProcess)) {
-                    input.removeLast();
+                    input.removeFirst();
                 }
                 pda.removeLast();
                 if (value.size() != 1) {
@@ -253,17 +232,20 @@ public  class SyntaxAnalyzer {
                     }
                 }
             }
-            return false;
+            else{
+                return false;
+            }
         }
         return (pda.getLast().equals("h0"));
     }
 
-//    public static Boolean check(String program){
-//        if( LexicalAnalyzer.checkProgram(program)){
-//            program = program.replaceAll()
-//        }
-//        else{
-//            return false;
-//        }
-//    }
+    public static Boolean check(String program){
+        if( LexicalAnalyzer.checkProgram(program)){
+            ArrayDeque<String> input= LexicalAnalyzer.transform(program);
+            return read(input);
+        }
+        else{
+            return false;
+        }
+    }
 }
