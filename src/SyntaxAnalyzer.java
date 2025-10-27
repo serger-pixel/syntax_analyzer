@@ -216,5 +216,17 @@ public  class SyntaxAnalyzer {
 
         // Переходы для <Список операторов>
         jumpTable.put("END,O", List.of());
+
+
+        //4-ая группа
+        jumpTable.put(":,:", List.of());
+        jumpTable.put(";,;", List.of());
+        jumpTable.put("OF,OF", List.of());
+        jumpTable.put("END_CASE,END_CASE", List.of());
+        jumpTable.put("(,(", List.of());
+        jumpTable.put("),)", List.of());
+        jumpTable.put("=,=", List.of());
+        jumpTable.put("INTEGER,INTEGER", List.of());
+        jumpTable.put("END,END", List.of());
     }
 }
