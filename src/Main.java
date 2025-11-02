@@ -8,7 +8,7 @@ public class Main {
                 "BEGIN\n" +
                 "CASE (a+b) OF " +
                         "4: " +
-                        "c = (1 + (a+b);" +
+                        "c = (1 + (10));" +
                         "3:" +
                         "a = 2; " +
                         "END_CASE;\n"+

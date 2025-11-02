@@ -59,6 +59,7 @@ public class LexicalAnalyzer {
     }
 
     //Сопоставление токена каждой лексеме - строчка
+
     public static ArrayDeque<String> transform(String program){
         String result = program;
         result = result.replaceAll(regexNotIdentifier, "_");
@@ -72,7 +73,18 @@ public class LexicalAnalyzer {
         result = result.replaceAll(regexIdentifier, " $0 ");
         ArrayList<String> listValues = new ArrayList<>(List.of(result.split("( |\\n){1,}")));
         listValues.remove("");
-        return new ArrayDeque<>(listValues);
+        ArrayDeque<String> outputDeq = new ArrayDeque<>();
+        for (String str: listValues){
+            if (Pattern.matches(regexIdentifier, str) || Pattern.matches(regexIntNumbers, str)){
+                for (int i=0; i<str.length(); i++){
+                    outputDeq.add(String.valueOf(str.charAt(i)));
+                }
+            }
+            else{
+                outputDeq.add(str);
+            }
+        }
+        return outputDeq;
 
     }
 
