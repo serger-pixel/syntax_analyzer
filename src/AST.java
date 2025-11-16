@@ -2,28 +2,28 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class AST {
+public class  AST {
     // Базовый узел
-    abstract class ASTNode {
+    abstract static class  ASTNode {
         public abstract String toPrefix();
     }
 
     // Выражения
-    abstract class ExpressionNode extends ASTNode {}
+    abstract static class  ExpressionNode extends ASTNode {}
 
-    class NumberNode extends ExpressionNode {
+    static class  NumberNode extends ExpressionNode {
         int value;
         NumberNode(int value) { this.value = value; }
         @Override public String toPrefix() { return String.valueOf(value); }
     }
 
-    class VariableNode extends ExpressionNode {
+    static class  VariableNode extends ExpressionNode {
         String name;
         VariableNode(String name) { this.name = name; }
         @Override public String toPrefix() { return name; }
     }
 
-    class BinaryOpNode extends ExpressionNode {
+    static class  BinaryOpNode extends ExpressionNode {
         String op;
         ExpressionNode left, right;
         BinaryOpNode(String op, ExpressionNode left, ExpressionNode right) {
@@ -38,9 +38,9 @@ public class AST {
     }
 
     // Операторы
-    abstract class StatementNode extends ASTNode {}
+    abstract static class  StatementNode extends ASTNode {}
 
-    class AssignNode extends StatementNode {
+    static class  AssignNode extends StatementNode {
         String var;
         ExpressionNode expr;
         AssignNode(String var, ExpressionNode expr) {
@@ -53,7 +53,7 @@ public class AST {
         }
     }
 
-    class ReadNode extends StatementNode {
+    static class  ReadNode extends StatementNode {
         List<String> vars;
         ReadNode(List<String> vars) { this.vars = vars; }
         @Override
@@ -62,7 +62,7 @@ public class AST {
         }
     }
 
-    class WriteNode extends StatementNode {
+    static class  WriteNode extends StatementNode {
         List<String> vars;
         WriteNode(List<String> vars) { this.vars = vars; }
         @Override
@@ -71,7 +71,7 @@ public class AST {
         }
     }
 
-    class CaseBranch {
+    static class  CaseBranch {
         ExpressionNode constant;
         StatementNode body;
         CaseBranch(ExpressionNode constant, StatementNode body) {
@@ -80,7 +80,7 @@ public class AST {
         }
     }
 
-    class SwitchNode extends StatementNode {
+    static class  SwitchNode extends StatementNode {
         ExpressionNode condition;
         List<CaseBranch> cases;
         SwitchNode(ExpressionNode condition, List<CaseBranch> cases) {
@@ -99,7 +99,7 @@ public class AST {
         }
     }
 
-    class ProgramNode extends StatementNode {
+    static class  ProgramNode extends StatementNode {
         List<StatementNode> statements;
         ProgramNode(List<StatementNode> statements) {
             this.statements = statements;

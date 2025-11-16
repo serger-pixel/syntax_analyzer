@@ -30,7 +30,7 @@ public class LexicalAnalyzer {
 
 
     private static final String regexKeyword = "\\b(BEGIN|VAR|OF|END)\\b";
-    private static final String regexOperator = "\\b(READ|CASE|END_CASE|WRITE|\\+|-|/|~)\\b";
+    private static final String regexOperator = "\\b(READ|CASE|END_CASE|WRITE)\\b|[+\\-/~]";
     private static final String regexType = "\\b(INTEGER)\\b";
     private static final String regexIdentifier = "\\b[a-z]{1,7}\\b";
     private static final String regexIntNumbers = "\\b\\d{1,8}\\b";
