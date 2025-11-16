@@ -1,7 +1,7 @@
 import java.util.*;
 
 public  class SyntaxAnalyzer {
-    //Пустой таккт
+    //Пустой такт
     private static String emptyProcess = "-";
     //Обычный такт
     private static String fullProcess = "+";
@@ -239,13 +239,4 @@ public  class SyntaxAnalyzer {
         return (pda.getLast().equals("h0"));
     }
 
-    public static Boolean check(String program){
-        if( LexicalAnalyzer.checkProgram(program)){
-            ArrayDeque<String> input= LexicalAnalyzer.transform(program);
-            return read(input);
-        }
-        else{
-            return false;
-        }
-    }
 }
