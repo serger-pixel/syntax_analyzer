@@ -55,6 +55,19 @@ public class  AST {
     // Операторы
     abstract static class  StatementNode extends ASTNode {}
 
+    public static class VarDeclNode extends StatementNode {
+        public final List<String> variableNames;
+
+        public VarDeclNode(List<String> variableNames) {
+            this.variableNames = variableNames;
+        }
+
+        @Override
+        public String toPrefix() {
+            return "VAR " + String.join(" ", variableNames);
+        }
+    }
+
     static class  AssignNode extends StatementNode {
         String var;
         ExpressionNode expr;
