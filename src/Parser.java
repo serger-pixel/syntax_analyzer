@@ -40,6 +40,7 @@ class Parser {
         List<AST.StatementNode> stmts = new ArrayList<>();
         while (currentToken() != null) {
             if(currentToken().value.equals("BEGIN") || currentToken().value.equals("END")){
+                current++;
                 continue;
             }
             stmts.add(parseStatement());
@@ -48,6 +49,14 @@ class Parser {
     }
 
     private AST.StatementNode parseStatement() {
+        if (match("VAR")){
+            List<String> vars = parseIdentList();
+            expect(":");
+            expect("INTEGER");
+            expect(";");
+            return new AST.VarDeclNode(vars);
+        }
+
         if (checkType(LexicalAnalyzer.TokenType.IDENTIFIER)) {
             String var = advance().value;
             if (match("=")) {
