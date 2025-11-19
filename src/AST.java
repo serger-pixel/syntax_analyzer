@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+//Узлы синтаксического дерева
 public class  AST {
     // Базовый узел
     abstract static class  ASTNode {
@@ -21,6 +22,20 @@ public class  AST {
         String name;
         VariableNode(String name) { this.name = name; }
         @Override public String toPrefix() { return name; }
+    }
+
+    static class UnaryOpNode extends ExpressionNode {
+        public BinaryOpNode node;
+
+        public UnaryOpNode(String operator, ExpressionNode operand) {
+            node = new BinaryOpNode("-", new NumberNode(0), operand);
+        }
+
+        @Override
+        public String toPrefix() {
+            return node.toPrefix();
+        }
+
     }
 
     static class  BinaryOpNode extends ExpressionNode {
